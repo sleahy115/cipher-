@@ -78,7 +78,12 @@
 
        for($i=0; $i< count($split_phrase); $i++) {
           $letter = ord($split_phrase[$i]);
-          $shifted_letter = $letter + 2;
+          if ($shift_direction === "right") {
+            $shifted_letter = $letter + $shift_value ;
+          }else {
+            $shifted_letter = $letter - $shift_value;
+          }
+
           array_push($output, $shifted_letter);
        }
        for($i=0; $i< count($output); $i++) {
