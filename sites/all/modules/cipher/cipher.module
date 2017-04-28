@@ -75,11 +75,14 @@
      $phrase = $_SESSION['phrase'];
      $lower_phrase = strtolower($phrase);
      $split_phrase = str_split($lower_phrase,1);
-
+// a = 97
        for($i=0; $i< count($split_phrase); $i++) {
           $letter = ord($split_phrase[$i]);
+          var_dump($letter);
           if ($shift_direction === "right") {
             $shifted_letter = $letter + $shift_value ;
+          }else if($letter === 97 && $shift_direction === "left") {
+            $shifted_letter = 123 - $shift_value;
           }else {
             $shifted_letter = $letter - $shift_value;
           }
