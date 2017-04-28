@@ -10,6 +10,13 @@
         'access callback' => TRUE,
         'type' => MENU_NORMAL_ITEM,
         );
+        $items['cipher_results'] = array(
+        'title' => 'Results',
+        'page callback' => 'cipher_encode',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+        );
+        return $items;
     }
 
     function cipher_form() {
@@ -18,14 +25,14 @@
        '#type' => 'textfield',
        '#description' => t('Please enter the shift value'),
        '#required' => TRUE,
-       'element_validate' => array('element_validate_integer_positive'),
+       '#element_validate' => array('element_validate_integer_positive'),
      );
      $form['shift_direction'] = array(
        '#title' => 'shift_direction',
        '#type' => 'textfield',
        '#description' => t('Please enter the shift direction'),
        '#required' => TRUE,
-       'element_validate' => array ('element_validate_value'),
+       '#element_validate' => array ('element_validate_value'),
      );
      $form['phrase'] = array(
        '#title' => 'phrase',
@@ -42,8 +49,32 @@
    }
 
    function element_validate_value($element) {
-     if($element !== "right" || $element !== 'left') {
+     if($element['#value'] != "right" && $element['#value'] != "left") {
+       var_dump($element['#value']);
+       var_dump("right");
        form_error($element , t('Please enter left or right'));
      }
+   }
 
+
+    function cipher_form_submit($form, &$form_state) {
+    $shift_value = $form_state['values']['shift_value'];
+    $shift_direction = $form_state['values']['shift_direction'];
+    $phrase = $form_state['values']['phrase'];
+    $_SESSION['shift_value'] = $shift_value;
+    $_SESSION['shift_direction'] = $shift_direction;
+    $_SESSION['phrase'] = $phrase;
+    $form_state['redirect'] = 'cipher_results';
+    }
+
+   function cipher_encode() {
+     $output = '';
+     $shift_value = $_SESSION['shift_value'];
+     $shift_direction = $_SESSION['shift_direction'];
+     var_dump($shift_direction);
+     $phrase = $_SESSION['phrase'];
+
+     $split_phrase = str_split($phrase);
+
+     return $split_phrase;
    }
