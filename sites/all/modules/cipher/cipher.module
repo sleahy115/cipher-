@@ -1,0 +1,49 @@
+<?php
+
+    function cipher_menu() {
+
+        $items = array();
+        $items['cipher_rules'] = array(
+        'title' => 'Cipher Rules',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('cipher_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+        );
+    }
+
+    function cipher_form() {
+     $form['shift_value'] = array(
+       '#title' => 'shift_value',
+       '#type' => 'textfield',
+       '#description' => t('Please enter the shift value'),
+       '#required' => TRUE,
+       'element_validate' => array('element_validate_integer_positive'),
+     );
+     $form['shift_direction'] = array(
+       '#title' => 'shift_direction',
+       '#type' => 'textfield',
+       '#description' => t('Please enter the shift direction'),
+       '#required' => TRUE,
+       'element_validate' => array ('element_validate_value'),
+     );
+     $form['phrase'] = array(
+       '#title' => 'phrase',
+       '#type' => 'textfield',
+       '#description' => t('Please enter a phrase'),
+       '#required' => TRUE,
+     );
+     $form['submit'] = array(
+       '#type' => 'submit',
+       '#value' => 'Encrypt',
+       '#required' => TRUE,
+     );
+     return $form;
+   }
+
+   function element_validate_value($element) {
+     if($element !== "right" || $element !== 'left') {
+       form_error($element , t('Please enter left or right'));
+     }
+
+   }

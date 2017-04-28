@@ -1,0 +1,5 @@
+name = cipher
+description = Encrypt phrase.
+package = Cipher
+core = 7.x
+files[] = cipher.module
