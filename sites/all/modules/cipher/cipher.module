@@ -72,18 +72,20 @@
      $shift_value = $_SESSION['shift_value'];
      $shift_direction = $_SESSION['shift_direction'];
      $phrase = $_SESSION['phrase'];
-     $alphabet = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
      $lower_phrase = strtolower($phrase);
      $split_phrase = str_split($lower_phrase,1);
+     $phrase_to_int = ord($phrase);
+     $test = $phrase_to_int + $shift_value;
 
-     for($i=0; $i < count($alphabet); $i++) {
-       for($i=0; $i < count($split_phrase); $i++) {
-            if($split_phrase[$i] === $alphabet[$i]) {
-                $letter = $alphabet[$i] + $shift_value;
-                var_dump($letter);
-                array_push($output, $letter);
-            }
-       }
-     }
+
+     var_dump(ord($phrase_to_int));
+     var_dump(chr($phrase_to_int));
+     var_dump($test);
+     var_dump(chr($test));
+    //  str_replace($split_phrase,)
+    //
+    //    for($i=0; $i< count($split_phrase); $i++) {
+    //    }
+
      return $output;
    }
