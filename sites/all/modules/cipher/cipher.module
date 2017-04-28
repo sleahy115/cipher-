@@ -70,23 +70,30 @@
    function cipher_encode() {
      $output = array();
      $results = array();
+     $shifted_letter = 0;
      $shift_value = $_SESSION['shift_value'];
      $shift_direction = $_SESSION['shift_direction'];
      $phrase = $_SESSION['phrase'];
      $lower_phrase = strtolower($phrase);
      $split_phrase = str_split($lower_phrase,1);
-// a = 97
+// a = 97 z = 122
+
        for($i=0; $i< count($split_phrase); $i++) {
           $letter = ord($split_phrase[$i]);
-          var_dump($letter);
-          if ($shift_direction === "right") {
+          if($letter === 32 || $letter === 33 || $letter === 63 || $letter === 59 || $letter === 46 || $letter === 44){
+            $shifted_letter = $letter;
+          }else if ($letter < 97) {
+            $shifted_letter = '';
+          }else if($letter === 122 && $shift_direction === "right") {
+            $shifted_letter = $letter + $shift_value - 26;
+            var_dump($shifted_letter);
+          }else if ($shift_direction === "right") {
             $shifted_letter = $letter + $shift_value ;
           }else if($letter === 97 && $shift_direction === "left") {
             $shifted_letter = 123 - $shift_value;
-          }else {
+          }else{
             $shifted_letter = $letter - $shift_value;
           }
-
           array_push($output, $shifted_letter);
        }
        for($i=0; $i< count($output); $i++) {
