@@ -49,17 +49,15 @@
    }
 
    function element_validate_value($element) {
-     if($element['#value'] != "right" && $element['#value'] != "left") {
-       var_dump($element['#value']);
-       var_dump("right");
+     var_dump(strtolower($element['#value']));
+     if(strtolower($element['#value']) != "right" && strtolower($element['#value']) != "left") {;
        form_error($element , t('Please enter left or right'));
      }
    }
 
-
     function cipher_form_submit($form, &$form_state) {
     $shift_value = $form_state['values']['shift_value'];
-    $shift_direction = $form_state['values']['shift_direction'];
+    $shift_direction =$form_state['values']['shift_direction'];
     $phrase = $form_state['values']['phrase'];
     $_SESSION['shift_value'] = $shift_value;
     $_SESSION['shift_direction'] = $shift_direction;
@@ -76,8 +74,7 @@
      $phrase = $_SESSION['phrase'];
      $lower_phrase = strtolower($phrase);
      $split_phrase = str_split($lower_phrase,1);
-// a = 97 z = 122
-
+//ASCII values a = 97 z = 122
        for($i=0; $i< count($split_phrase); $i++) {
           $letter = ord($split_phrase[$i]);
           if($letter === 32 || $letter === 33 || $letter === 63 || $letter === 59 || $letter === 46 || $letter === 44){
