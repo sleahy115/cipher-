@@ -16,6 +16,13 @@
         'access callback' => TRUE,
         'type' => MENU_CALLBACK,
         );
+        $items['Decrypt'] = array(
+        'title' => 'Decrypt',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('decrypt_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+        );
         $items['translate'] = array(
         'title' => 'English translation',
         'page callback' => 'decode',
@@ -53,6 +60,34 @@
      return $form;
    }
 
+   function decrypt_form() {
+    $form['shift_value_decrypt'] = array(
+      '#title' => 'shift_value_decrypt',
+      '#type' => 'textfield',
+      '#description' => t('Please enter the shift value provided'),
+      '#required' => TRUE,
+      '#element_validate' => array('element_validate_integer_positive'),
+    );
+    $form['shift_direction_decrypt'] = array(
+      '#title' => 'shift_direction_decrypt',
+      '#type' => 'textfield',
+      '#description' => t('Please enter the shift direction provided'),
+      '#required' => TRUE,
+      '#element_validate' => array ('element_validate_value'),
+    );
+    $form['phrase_decrypt'] = array(
+      '#title' => 'phrase_decrypt',
+      '#type' => 'textfield',
+      '#description' => t('Please enter the eccrypted phrase'),
+      '#required' => TRUE,
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Decrypt',
+    );
+    return $form;
+  }
+
    function element_validate_value($element) {
      var_dump(strtolower($element['#value']));
      if(strtolower($element['#value']) != "right" && strtolower($element['#value']) != "left") {;
@@ -82,8 +117,18 @@
       $form_state['redirect'] = 'translate';
     }
 
+    function decrypt_form_submit($form, &$form_state) {
+    $shift_value_decrypt = $form_state['values']['shift_value_decrypt'];
+    $shift_direction_decrypt =$form_state['values']['shift_direction_decrypt'];
+    $phrase_decrypt = $form_state['values']['phrase_decrypt'];
+    $_SESSION['shift_value_decrypt'] = $shift_value_decrypt;
+    $_SESSION['shift_direction_decrypt'] = $shift_direction_decrypt;
+    $_SESSION['phrase_decrypt'] = $phrase_decrypt;
+    $form_state['redirect'] = 'translate';
+  }
+
    function cipher_encode() {
-     $output = array();
+     $shifted_letters_array = array();
      $results = array();
      $shifted_letter = 0;
      $shift_value = $_SESSION['shift_value'];
@@ -108,10 +153,10 @@
           }else{
             $shifted_letter = $letter - $shift_value;
           }
-          array_push($output, $shifted_letter);
+          array_push($shifted_letters_array, $shifted_letter);
        }
-       for($i=0; $i< count($output); $i++) {
-          $return = chr($output[$i]);
+       for($i=0; $i< count($shifted_letters_array); $i++) {
+          $return = chr($shifted_letters_array[$i]);
           array_push($results, $return);
        }
        $encoded = implode($results);
@@ -126,10 +171,14 @@
     $encoded_phrase = $_SESSION['encoded'];
     $english_phrase = $_SESSION['phrase'];
 
+    $shift_value_decrypt = $_SESSION['shift_value_decrypt'];
+    $shift_direction_decrypt = $_SESSION['shift_direction_decrypt'];
+    $phrase_decrypt = $_SESSION['phrase_decrypt'];
+
     $english_output=<<<EOD
     <h1>English Translation</h1>
     <h3>Encoded Phrase: $encoded_phrase<h3>
     <h3>English Translation: $english_phrase</h3>
 EOD;
-    return $english_output;
+    return $shift_value_decrypt.$shift_direction_decrypt.$phrase_decrypt;
   }
