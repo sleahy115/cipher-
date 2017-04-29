@@ -3,8 +3,8 @@
     function cipher_menu() {
 
         $items = array();
-        $items['cipher_rules'] = array(
-        'title' => 'Cipher Rules',
+        $items['Encrypt'] = array(
+        'title' => 'Encrypt',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('cipher_form'),
         'access callback' => TRUE,
