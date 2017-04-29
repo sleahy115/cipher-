@@ -1,173 +1,179 @@
 <?php
 
-    function cipher_menu() {
-
-        $items = array();
-        $items['Encrypt'] = array(
+function cipher_menu()
+{
+    $items = array();
+    $items['Encrypt'] = array(
         'title' => 'Encrypt',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('cipher_form'),
+        'page arguments' => array(
+            'cipher_form'
+        ),
         'access callback' => TRUE,
-        'type' => MENU_NORMAL_ITEM,
-        );
-        $items['cipher_results'] = array(
+        'type' => MENU_NORMAL_ITEM
+    );
+    $items['cipher_results'] = array(
         'title' => 'Results',
         'page callback' => 'cipher_encode',
         'access callback' => TRUE,
-        'type' => MENU_CALLBACK,
-        );
-        $items['Decrypt'] = array(
+        'type' => MENU_CALLBACK
+    );
+    $items['Decrypt'] = array(
         'title' => 'Decrypt',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('decrypt_form'),
+        'page arguments' => array(
+            'decrypt_form'
+        ),
         'access callback' => TRUE,
-        'type' => MENU_NORMAL_ITEM,
-        );
-        $items['translate'] = array(
-        'title' => 'English translation',
+        'type' => MENU_NORMAL_ITEM
+    );
+    $items['translate'] = array(
+        'title' => 'English Translation',
         'page callback' => 'decode',
         'access callback' => TRUE,
-        'type' => MENU_CALLBACK,
-        );
-        return $items;
-    }
-
-    function cipher_form() {
-     $form['shift_value'] = array(
-       '#title' => 'shift_value',
-       '#type' => 'textfield',
-       '#description' => t('Please enter the shift value'),
-       '#required' => TRUE,
-       '#element_validate' => array('element_validate_integer_positive'),
-     );
-     $form['shift_direction'] = array(
-       '#title' => 'shift_direction',
-       '#type' => 'textfield',
-       '#description' => t('Please enter the shift direction'),
-       '#required' => TRUE,
-       '#element_validate' => array ('element_validate_value'),
-     );
-     $form['phrase'] = array(
-       '#title' => 'phrase',
-       '#type' => 'textfield',
-       '#description' => t('Please enter a phrase'),
-       '#required' => TRUE,
-     );
-     $form['submit'] = array(
-       '#type' => 'submit',
-       '#value' => 'Encrypt',
-     );
-     return $form;
-   }
-
-   function decrypt_form() {
-    $form['shift_value_decrypt'] = array(
-      '#title' => 'shift_value_decrypt',
-      '#type' => 'textfield',
-      '#description' => t('Please enter the shift value provided'),
-      '#required' => TRUE,
-      '#element_validate' => array('element_validate_integer_positive'),
+        'type' => MENU_CALLBACK
     );
-    $form['shift_direction_decrypt'] = array(
-      '#title' => 'shift_direction_decrypt',
-      '#type' => 'textfield',
-      '#description' => t('Please enter the shift direction provided'),
-      '#required' => TRUE,
-      '#element_validate' => array ('element_validate_value'),
+    return $items;
+}
+
+function cipher_form()
+{
+    $form['shift_value'] = array(
+        '#title' => 'shift_value',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the shift value'),
+        '#required' => TRUE,
+        '#element_validate' => array(
+            'element_validate_integer_positive'
+        )
     );
-    $form['phrase_decrypt'] = array(
-      '#title' => 'phrase_decrypt',
-      '#type' => 'textfield',
-      '#description' => t('Please enter the eccrypted phrase'),
-      '#required' => TRUE,
+    $form['shift_direction'] = array(
+        '#title' => 'shift_direction',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the shift direction'),
+        '#required' => TRUE,
+        '#element_validate' => array(
+            'element_validate_value'
+        )
+    );
+    $form['phrase'] = array(
+        '#title' => 'phrase',
+        '#type' => 'textfield',
+        '#description' => t('Please enter a phrase'),
+        '#required' => TRUE
     );
     $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => 'Decrypt',
+        '#type' => 'submit',
+        '#value' => 'Encrypt'
     );
     return $form;
-  }
+}
 
-   function element_validate_value($element) {
-     var_dump(strtolower($element['#value']));
-     if(strtolower($element['#value']) != "right" && strtolower($element['#value']) != "left") {;
-       form_error($element , t('Please enter left or right'));
-     }
-   }
+function decrypt_form()
+{
+    $form['shift_value_decrypt'] = array(
+        '#title' => 'shift_value_decrypt',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the shift value provided'),
+        '#required' => TRUE,
+        '#element_validate' => array(
+            'element_validate_integer_positive'
+        )
+    );
+    $form['shift_direction_decrypt'] = array(
+        '#title' => 'shift_direction_decrypt',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the shift direction provided'),
+        '#required' => TRUE,
+        '#element_validate' => array(
+            'element_validate_value'
+        )
+    );
+    $form['phrase_decrypt'] = array(
+        '#title' => 'phrase_decrypt',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the eccrypted phrase'),
+        '#required' => TRUE
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Decrypt'
+    );
+    return $form;
+}
 
-   function english_form() {
-     $form['Translate'] = array(
-       '#type' => 'submit',
-       '#value' => 'Translate',
-     );
-     return $form;
-   }
+function element_validate_value($element)
+{
+    if (strtolower($element['#value']) != "right" && strtolower($element['#value']) != "left") {
+      ;
+        form_error($element, t('Please enter left or right'));
+    }
+}
 
-    function cipher_form_submit($form, &$form_state) {
+
+function cipher_form_submit($form, &$form_state)
+{
     $shift_value = $form_state['values']['shift_value'];
-    $shift_direction =$form_state['values']['shift_direction'];
+    $shift_direction = $form_state['values']['shift_direction'];
     $phrase = $form_state['values']['phrase'];
     $_SESSION['shift_value'] = $shift_value;
     $_SESSION['shift_direction'] = $shift_direction;
     $_SESSION['phrase'] = $phrase;
     $form_state['redirect'] = 'cipher_results';
-    }
+}
 
-    function english_form_submit($form, &$form_state) {
-      $form_state['redirect'] = 'translate';
-    }
 
-    function decrypt_form_submit($form, &$form_state) {
+function decrypt_form_submit($form, &$form_state)
+{
     $shift_value_decrypt = $form_state['values']['shift_value_decrypt'];
-    $shift_direction_decrypt =$form_state['values']['shift_direction_decrypt'];
+    $shift_direction_decrypt = $form_state['values']['shift_direction_decrypt'];
     $phrase_decrypt = $form_state['values']['phrase_decrypt'];
     $_SESSION['shift_value_decrypt'] = $shift_value_decrypt;
     $_SESSION['shift_direction_decrypt'] = $shift_direction_decrypt;
     $_SESSION['phrase_decrypt'] = $phrase_decrypt;
     $form_state['redirect'] = 'translate';
-  }
+}
 
-   function cipher_encode() {
-     $shifted_letters_array = array();
-     $results = array();
-     $shifted_letter = 0;
-     $shift_value = $_SESSION['shift_value'];
-     $shift_direction = $_SESSION['shift_direction'];
-     $phrase = $_SESSION['phrase'];
-     $lower_phrase = strtolower($phrase);
-     $split_phrase = str_split($lower_phrase,1);
-//ASCII values a = 97 z = 122
-       for($i=0; $i< count($split_phrase); $i++) {
-          $letter = ord($split_phrase[$i]);
-          if($letter === 32 || $letter === 33 || $letter === 63 || $letter === 59 || $letter === 46 || $letter === 44){
+function cipher_encode()
+{
+    $shifted_letters_array = array();
+    $results = array();
+    $shifted_letter = 0;
+    $shift_value = $_SESSION['shift_value'];
+    $shift_direction = $_SESSION['shift_direction'];
+    $phrase = $_SESSION['phrase'];
+    $lower_phrase = strtolower($phrase);
+    $split_phrase = str_split($lower_phrase, 1);
+    //ASCII values a = 97 z = 122
+    for ($i = 0; $i < count($split_phrase); $i++) {
+        $letter = ord($split_phrase[$i]);
+        if ($letter === 32 || $letter === 33 || $letter === 63 || $letter === 59 || $letter === 46 || $letter === 44) {
             $shifted_letter = $letter;
-          }else if ($letter < 97) {
+        } else if ($letter < 97) {
             $shifted_letter = '';
-          }else if($letter === 122 && $shift_direction === "right") {
+        } else if ($letter === 122 && $shift_direction === "right") {
             $shifted_letter = $letter + $shift_value - 26;
-            var_dump($shifted_letter);
-          }else if ($shift_direction === "right") {
-            $shifted_letter = $letter + $shift_value ;
-          }else if($letter === 97 && $shift_direction === "left") {
+        } else if ($shift_direction === "right") {
+            $shifted_letter = $letter + $shift_value;
+        } else if ($letter === 97 && $shift_direction === "left") {
             $shifted_letter = 123 - $shift_value;
-          }else{
+        } else {
             $shifted_letter = $letter - $shift_value;
-          }
-          array_push($shifted_letters_array, $shifted_letter);
-       }
-       for($i=0; $i< count($shifted_letters_array); $i++) {
-          $return = chr($shifted_letters_array[$i]);
-          array_push($results, $return);
-       }
-       $encoded = implode($results);
-       $_SESSION['encoded'] = $encoded;
-       $translate_button_output = drupal_get_form('english_form');
-       $encoded.= '<br>'.drupal_render($translate_button_output);
+        }
+        array_push($shifted_letters_array, $shifted_letter);
+    }
+    for ($i = 0; $i < count($shifted_letters_array); $i++) {
+        $return = chr($shifted_letters_array[$i]);
+        array_push($results, $return);
+    }
+    $encoded = implode($results);
+    $_SESSION['encoded'] = $encoded;
 
-       return $encoded;
-  }
+    return $encoded;
+}
 
-  function decode() {
+function decode()
+{
     $encoded_phrase = $_SESSION['encoded'];
     $shifted_letters_array_decrypt = array();
     $decrypt_results = array();
@@ -176,35 +182,34 @@
     $shift_direction_decrypt = $_SESSION['shift_direction_decrypt'];
     $phrase_decrypt = $_SESSION['phrase_decrypt'];
     $lower_phrase_decrypt = strtolower($phrase_decrypt);
-    $split_phrase_decrypt = str_split($lower_phrase_decrypt,1);
+    $split_phrase_decrypt = str_split($lower_phrase_decrypt, 1);
 
-      for($i=0; $i< count($split_phrase_decrypt); $i++) {
-         $letter_decrypt = ord($split_phrase_decrypt[$i]);
-         if($letter_decrypt === 32 || $letter_decrypt === 33 || $letter_decrypt === 63 || $letter_decrypt === 59 || $letter_decrypt === 46 || $letter_decrypt === 44){
-           $shifted_letter_decrypt = $letter_decrypt;
-         }else if ($letter_decrypt < 97) {
-           $shifted_letter_decrypt = '';
-         }else if($letter_decrypt === 122 && $shift_direction === "right") {
-           $shifted_letter_decrypt = $letter_decrypt + $shift_value_decrypt + 26;
-         }else if ($shift_direction_decrypt === "right") {
-           $shifted_letter_decrypt = $letter_decrypt - $shift_value_decrypt ;
-         }else if($letter_decrypt === 97 && $shift_direction_decrypt === "left") {
-           $shifted_letter_decrypt = 123 + $shift_value_decrypt;
-         }else{
-           $shifted_letter_decrypt = $letter_decrypt + $shift_value_decrypt;
-         }
-         array_push($shifted_letters_array_decrypt, $shifted_letter_decrypt);
-      }
-      for($i=0; $i< count($shifted_letters_array_decrypt); $i++) {
-         $decrypt_return = chr($shifted_letters_array_decrypt[$i]);
-         array_push($decrypt_results, $decrypt_return);
-      }
-      $decrypted = implode($decrypt_results);
+    for ($i = 0; $i < count($split_phrase_decrypt); $i++) {
+        $letter_decrypt = ord($split_phrase_decrypt[$i]);
+        if ($letter_decrypt === 32 || $letter_decrypt === 33 || $letter_decrypt === 63 || $letter_decrypt === 59 || $letter_decrypt === 46 || $letter_decrypt === 44) {
+            $shifted_letter_decrypt = $letter_decrypt;
+        } else if ($letter_decrypt < 97) {
+            $shifted_letter_decrypt = '';
+        } else if ($letter_decrypt === 122 && $shift_direction === "right") {
+            $shifted_letter_decrypt = $letter_decrypt + $shift_value_decrypt + 26;
+        } else if ($shift_direction_decrypt === "right") {
+            $shifted_letter_decrypt = $letter_decrypt - $shift_value_decrypt;
+        } else if ($letter_decrypt === 97 && $shift_direction_decrypt === "left") {
+            $shifted_letter_decrypt = 123 + $shift_value_decrypt;
+        } else {
+            $shifted_letter_decrypt = $letter_decrypt + $shift_value_decrypt;
+        }
+        array_push($shifted_letters_array_decrypt, $shifted_letter_decrypt);
+    }
+    for ($i = 0; $i < count($shifted_letters_array_decrypt); $i++) {
+        $decrypt_return = chr($shifted_letters_array_decrypt[$i]);
+        array_push($decrypt_results, $decrypt_return);
+    }
+    $decrypted = implode($decrypt_results);
 
-    $english_output=<<<EOD
-    <h1>English Translation</h1>
+    $english_output = <<<EOD
     <h3>Encoded Phrase: $encoded_phrase<h3>
     <h3>English Translation: $decrypted</h3>
 EOD;
     return $english_output;
-  }
+}
