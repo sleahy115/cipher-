@@ -169,16 +169,42 @@
 
   function decode() {
     $encoded_phrase = $_SESSION['encoded'];
-    $english_phrase = $_SESSION['phrase'];
-
+    $shifted_letters_array_decrypt = array();
+    $decrypt_results = array();
+    $shifted_letter_decrypt = 0;
     $shift_value_decrypt = $_SESSION['shift_value_decrypt'];
     $shift_direction_decrypt = $_SESSION['shift_direction_decrypt'];
     $phrase_decrypt = $_SESSION['phrase_decrypt'];
+    $lower_phrase_decrypt = strtolower($phrase_decrypt);
+    $split_phrase_decrypt = str_split($lower_phrase_decrypt,1);
+
+      for($i=0; $i< count($split_phrase_decrypt); $i++) {
+         $letter_decrypt = ord($split_phrase_decrypt[$i]);
+         if($letter_decrypt === 32 || $letter_decrypt === 33 || $letter_decrypt === 63 || $letter_decrypt === 59 || $letter_decrypt === 46 || $letter_decrypt === 44){
+           $shifted_letter_decrypt = $letter_decrypt;
+         }else if ($letter_decrypt < 97) {
+           $shifted_letter_decrypt = '';
+         }else if($letter_decrypt === 122 && $shift_direction === "right") {
+           $shifted_letter_decrypt = $letter_decrypt + $shift_value_decrypt + 26;
+         }else if ($shift_direction_decrypt === "right") {
+           $shifted_letter_decrypt = $letter_decrypt - $shift_value_decrypt ;
+         }else if($letter_decrypt === 97 && $shift_direction_decrypt === "left") {
+           $shifted_letter_decrypt = 123 + $shift_value_decrypt;
+         }else{
+           $shifted_letter_decrypt = $letter_decrypt + $shift_value_decrypt;
+         }
+         array_push($shifted_letters_array_decrypt, $shifted_letter_decrypt);
+      }
+      for($i=0; $i< count($shifted_letters_array_decrypt); $i++) {
+         $decrypt_return = chr($shifted_letters_array_decrypt[$i]);
+         array_push($decrypt_results, $decrypt_return);
+      }
+      $decrypted = implode($decrypt_results);
 
     $english_output=<<<EOD
     <h1>English Translation</h1>
     <h3>Encoded Phrase: $encoded_phrase<h3>
-    <h3>English Translation: $english_phrase</h3>
+    <h3>English Translation: $decrypted</h3>
 EOD;
-    return $shift_value_decrypt.$shift_direction_decrypt.$phrase_decrypt;
+    return $english_output;
   }
