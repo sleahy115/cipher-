@@ -160,6 +160,13 @@ function cipher_encode()
         } else {
             $shifted_letter = $letter - $shift_value;
         }
+
+        if($shifted_letter > 122) {
+          var_dump($shifted_letter);
+            $shifted_letter = $letter + $shift_value - 26;
+            var_dump($shifted_letter);
+        }
+
         array_push($shifted_letters_array, $shifted_letter);
     }
     for ($i = 0; $i < count($shifted_letters_array); $i++) {
