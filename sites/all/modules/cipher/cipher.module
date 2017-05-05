@@ -147,6 +147,7 @@ function cipher_encode()
     //ASCII values a = 97 z = 122
     for ($i = 0; $i < count($split_phrase); $i++) {
         $letter = ord($split_phrase[$i]);
+        var_dump($letter."letter1");
         if ($letter === 32 || $letter === 33 || $letter === 63 || $letter === 59 || $letter === 46 || $letter === 44) {
             $shifted_letter = $letter;
         } else if ($letter < 97) {
@@ -156,14 +157,24 @@ function cipher_encode()
         } else if ($shift_direction === "right") {
             $shifted_letter = $letter + $shift_value;
         } else if ($letter === 97 && $shift_direction === "left") {
-            $shifted_letter = 123 - $shift_value;
+            $shifted_letter = 124 - $shift_value;
+              var_dump("left condition");
         } else {
             $shifted_letter = $letter - $shift_value;
         }
+        var_dump($shifted_letter."shifted_letter1");
 
-        if($shifted_letter > 122) {
-          var_dump($shifted_letter);
-            $shifted_letter = $letter + $shift_value - 26;
+        if ($shifted_letter === 149 && $shift_direction === 'right'){
+           $shifted_letter = $shifted_letter - 28;
+        } else if($shifted_letter > 122 && $shift_direction === 'right') {
+            var_dump($shifted_letter."right");
+            $shifted_letter = $shifted_letter - 26;
+            var_dump($shifted_letter);
+        } else if($shifted_letter === 70 && $shift_direction === "left"){
+            $shifted_letter = $shifted_letter + 28;
+        }else if ($shifted_letter < 97 && $shift_direction === 'left') {
+            var_dump($shifted_letter."left");
+            $shifted_letter = $shifted_letter -27;
             var_dump($shifted_letter);
         }
 
